@@ -10,6 +10,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      REQRES_API_KEY: ${{ secrets.REQRES_API_KEY }}
+
     steps:
       - uses: actions/checkout@v4
 
@@ -19,10 +22,18 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Run API tests
-        run: mvn test -B
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
-      - name: Upload HTML report
+      - name: Run API tests
+        run: mvn clean test -B
+
+      - name: Upload Extent Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
