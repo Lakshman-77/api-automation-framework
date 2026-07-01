@@ -8,25 +8,39 @@ import org.testng.ITestListener;
 import org.testng.ITestResult;
 
 public class ExtentReportListener implements ITestListener {
-    private static ExtentReports extent;
+
+    private static final ExtentReports extent = createInstance();
+
     private static final ThreadLocal<ExtentTest> currentTest = new ThreadLocal<>();
+
+    private static ExtentReports createInstance() {
+
+        ExtentSparkReporter spark =
+                new ExtentSparkReporter("test-output/api-report.html");
+
+        spark.config().setReportName("API Automation - ReqRes");
+        spark.config().setDocumentTitle("API Test Results");
+
+        ExtentReports extentReports = new ExtentReports();
+        extentReports.attachReporter(spark);
+        extentReports.setSystemInfo("Base URL", "https://reqres.in/api");
+
+        return extentReports;
+    }
 
     @Override
     public void onStart(ITestContext context) {
-        ExtentSparkReporter spark = new ExtentSparkReporter("test-output/api-report.html");
-        spark.config().setReportName("API Automation - ReqRes");
-        spark.config().setDocumentTitle("API Test Results");
-        extent = new ExtentReports();
-        extent.attachReporter(spark);
-        extent.setSystemInfo("Base URL", "https://reqres.in/api");
+        // Intentionally left empty.
+        // Report is initialized only once.
     }
 
     @Override
     public void onTestStart(ITestResult result) {
+
         ExtentTest test = extent.createTest(
-            result.getMethod().getMethodName(),
-            result.getMethod().getDescription()
-        );
+                result.getMethod().getMethodName(),
+                result.getMethod().getDescription());
+
         currentTest.set(test);
     }
 

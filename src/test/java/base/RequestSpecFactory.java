@@ -15,7 +15,16 @@ public class RequestSpecFactory {
         if (envKey != null && !envKey.isBlank()) {
             API_KEY = envKey;
         } else {
-            API_KEY = Dotenv.load().get("REQRES_API_KEY");
+            Dotenv dotenv = Dotenv.configure()
+                    .ignoreIfMissing()
+                    .load();
+
+            API_KEY = dotenv.get("REQRES_API_KEY");
+        }
+
+        if (API_KEY == null || API_KEY.isBlank()) {
+            throw new IllegalStateException(
+                    "REQRES_API_KEY is not configured. Set it as an environment variable or create a .env file.");
         }
     }
 
