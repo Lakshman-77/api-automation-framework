@@ -7,6 +7,8 @@ import models.User;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.time.Instant;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
@@ -45,7 +47,7 @@ public class UpdateUserTest extends BaseTest {
             .body("updatedAt", notNullValue());
     }
 
-    @Test(description = "updatedAt in PUT response should be a valid recent timestamp")
+    @Test(description = "updatedAt should be a valid ISO-8601 timestamp")
     public void testUpdatedAtTimestamp() {
         User updatedData = new User("Time Check", "Engineer");
 
@@ -61,9 +63,13 @@ public class UpdateUserTest extends BaseTest {
             .jsonPath()
             .getString("updatedAt");
 
-        Assert.assertNotNull(updatedAt);
-        Assert.assertTrue(updatedAt.startsWith("202"),
-                "Timestamp should be in the current decade");
+        Assert.assertNotNull(updatedAt, "updatedAt should not be null");
+
+        try {
+            Instant.parse(updatedAt);
+        } catch (Exception e) {
+            Assert.fail("Invalid ISO-8601 timestamp: " + updatedAt);
+        }
     }
 
     @Test(description = "PUT with only name field should still return 200")
