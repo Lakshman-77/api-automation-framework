@@ -1,65 +1,147 @@
 # API Automation Framework
 
-REST API test automation framework built with REST Assured and TestNG, targeting the [ReqRes](https://reqres.in) public API. Covers full CRUD operations with JSON schema validation and HTML reporting via ExtentReports.
+A reusable REST API automation framework built using **Java, REST Assured, TestNG, and Maven** for automated testing of the **ReqRes** public REST API. The framework follows a modular design with reusable request specifications, JSON schema validation, environment-based configuration, and CI integration.
+
+---
+
+## Features
+
+- CRUD API automation (GET, POST, PUT, PATCH, DELETE)
+- 23 automated API test cases
+- Positive and negative test scenarios
+- JSON Schema Validation
+- Reusable Request Specification using `RequestSpecBuilder`
+- POJO-based request payloads with Jackson
+- Request & Response logging
+- Environment variable-based API key management
+- HTML reporting using ExtentReports
+- GitHub Actions CI pipeline
+
+---
 
 ## Tech Stack
 
-- **Java 17**
-- **REST Assured 5.4** — API testing DSL
-- **TestNG 7.9** — test runner
-- **Jackson Databind** — Java object ↔ JSON mapping
-- **JSON Schema Validator** — contract/schema validation
-- **ExtentReports** — HTML test reports
-- **GitHub Actions** — CI on every push
+- Java 17
+- REST Assured 5.4
+- TestNG 7.9
+- Maven
+- Jackson Databind
+- JSON Schema Validator
+- ExtentReports
+- GitHub Actions
+
+---
 
 ## Project Structure
 
-```
+```text
 api-automation-framework/
-├── src/test/
-│   ├── java/
-│   │   ├── base/BaseTest.java          # Base URI + logging filters
-│   │   ├── endpoints/UserEndpoints.java # API endpoint constants
-│   │   ├── models/User.java            # POJO for request/response
-│   │   ├── listeners/                  # ExtentReports integration
-│   │   └── tests/
-│   │       ├── GetUserTest.java        # GET + schema validation
-│   │       ├── CreateUserTest.java     # POST
-│   │       ├── UpdateUserTest.java     # PUT + PATCH
-│   │       └── DeleteUserTest.java     # DELETE
-│   └── resources/
-│       ├── testng.xml
-│       └── schemas/
-│           ├── get-user-schema.json
-│           └── create-user-schema.json
-├── .github/workflows/ci.yml
-└── pom.xml
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+│
+├── src/
+│   └── test/
+│       ├── java/
+│       │   ├── base/
+│       │   │   ├── BaseTest.java
+│       │   │   └── RequestSpecFactory.java
+│       │   ├── endpoints/
+│       │   │   └── UserEndpoints.java
+│       │   ├── listeners/
+│       │   │   └── ExtentReportListener.java
+│       │   ├── models/
+│       │   │   └── User.java
+│       │   └── tests/
+│       │       ├── CreateUserTest.java
+│       │       ├── DeleteUserTest.java
+│       │       ├── GetUserTest.java
+│       │       ├── NegativeApiTest.java
+│       │       └── UpdateUserTest.java
+│       │
+│       └── resources/
+│           ├── schemas/
+│           └── testng.xml
+│
+├── pom.xml
+├── README.md
+└── .gitignore
 ```
 
-## Test Coverage (16 test cases)
+---
 
-| HTTP Method | Tests |
-|---|---|
-| GET | Single user, user not found (404), paginated list, schema validation, pagination correctness |
-| POST | Create user, validate id, schema validation, createdAt timestamp |
-| PUT | Full update, PATCH partial update, updatedAt timestamp, name-only PUT |
-| DELETE | 204 status, empty response body, multiple user deletes |
+## Test Coverage (23 Test Cases)
 
-## How to Run
+| Category | Coverage |
+|----------|----------|
+| GET APIs | Fetch single user, user list, pagination, schema validation, user not found |
+| POST APIs | Create user, validate generated ID, schema validation, timestamp validation |
+| PUT/PATCH APIs | Full update, partial update, timestamp validation, partial payload updates |
+| DELETE APIs | Delete user, empty response validation, multiple delete scenarios |
+| Negative Testing | Missing password, missing email, invalid login, invalid user ID, malformed requests |
 
-**Prerequisites:** Java 17, Maven
-
-```bash
-git clone <repo-url>
-cd api-automation-framework
-mvn test
-```
-
-HTML report is generated at `test-output/api-report.html`.
+---
 
 ## Design Decisions
 
-- **Endpoint constants** in `UserEndpoints.java` so URL changes are a single-line fix
-- **POJO model** (`User.java`) for cleaner request bodies instead of raw JSON strings
-- **JSON Schema files** in `resources/schemas/` for contract testing — catches API response structure changes early
-- **Request/Response logging** enabled in BaseTest so every CI failure shows the exact HTTP traffic
+- Centralized API endpoints using `UserEndpoints`
+- Reusable `RequestSpecification` built with `RequestSpecBuilder`
+- POJO-based request bodies using Jackson serialization
+- JSON Schema validation for API contract testing
+- Request and Response logging enabled for easier debugging
+- Environment variable-based API key management using `.env`
+- ExtentReports listener for HTML test reporting
+- GitHub Actions workflow for Continuous Integration
+
+---
+
+## Running the Project
+
+### Prerequisites
+
+- Java 17+
+- Maven 3.9+
+- ReqRes API Key
+
+### Clone Repository
+
+```bash
+git clone https://github.com/<your-username>/api-automation-framework.git
+cd api-automation-framework
+```
+
+### Create a `.env` file
+
+```text
+REQRES_API_KEY=your_api_key_here
+```
+
+### Execute Tests
+
+```bash
+mvn clean test
+```
+
+---
+
+## Test Report
+
+After execution, the Extent Report is generated under:
+
+```text
+test-output/api-report.html
+```
+
+---
+
+## Continuous Integration
+
+The project includes a GitHub Actions workflow that automatically executes the API test suite on every push.
+
+---
+
+## Author
+
+**Lakshman Naidu**
+
+B.Tech CSE, IIT Dharwad
