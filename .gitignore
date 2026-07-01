@@ -1,0 +1,7 @@
+target/
+test-output/
+.env
+.idea/
+.vscode/
+*.iml
+**/.DS_Store
