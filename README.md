@@ -1,6 +1,6 @@
 # API Automation Framework
 
-![API Tests](https://github.com/Lakshman-77/api-automation-framework/actions/workflows/ci.yml/badge.svg)
+[![API Automation Tests](https://github.com/Lakshman-77/api-automation-framework/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Lakshman-77/api-automation-framework/actions/workflows/ci.yml)
 
 A reusable REST API automation framework built using **Java, REST Assured, TestNG, and Maven** for testing the **ReqRes** public REST API. The framework demonstrates scalable API test automation practices including reusable request specifications, centralized endpoint management, JSON schema validation, secure configuration management, HTML reporting, and GitHub Actions CI.
 
